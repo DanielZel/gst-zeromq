@@ -315,6 +315,15 @@ gst_zmq_src_open (GstZmqSrc * src)
             zmq_strerror (errno)), NULL);
     retval = FALSE;
   }
+  
+   //TODO change this to be optional
+   GST_DEBUG ("setting CONFLATE=1");
+   int conflate = 1;
+   rc = zmq_setsockopt (src->socket, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+   if (rc){
+        GST_ERROR ("zmq_setsockopt() to conflate=1 failed with error code: %d",rc);
+        retval = FALSE;
+   }
 
   if (retval) {
     if (src->bind) {
